@@ -9,7 +9,7 @@ Resources:
   HelloWorldFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: halt-rds/
+      CodeUri: bin/q
       Handler: halt-rds
       Runtime: go1.x
       Tracing: Active
