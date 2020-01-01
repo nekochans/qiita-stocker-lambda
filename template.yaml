@@ -6,19 +6,28 @@ Globals:
     Timeout: 5
 
 Resources:
-  HelloWorldFunction:
+  HaltRdsFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: bin/q
+      CodeUri: bin/
       Handler: halt-rds
       Runtime: go1.x
       Tracing: Active
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - rds:StopDBCluster
+              Resource: '*'
       Events:
-        CatchAll:
-          Type: Api
+        StartScan:
+          Type: Schedule
           Properties:
-            Path: /hello
-            Method: GET
-      Environment:
-        Variables:
-          PARAM1: VALUE
+            Schedule: cron(0 18 ? * * *)
+
+  HaltRdsFuncLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${HaltRdsFunction}
+      RetentionInDays: 7
