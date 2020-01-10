@@ -1,8 +1,6 @@
 package infrastructure
 
 import (
-	"log"
-
 	"github.com/nekochans/qiita-stocker-lambda/stop-fargate/infrastructure/client"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -15,7 +13,7 @@ type ECS struct {
 }
 
 type ECSRepository interface {
-	StopFargate(e ECS)
+	StopFargate(e ECS) error
 }
 
 type ecsRepository struct {
@@ -28,7 +26,7 @@ func NewECSRepository(c *client.ECS) ECSRepository {
 	}
 }
 
-func (e *ecsRepository) StopFargate(target ECS) {
+func (e *ecsRepository) StopFargate(target ECS) error {
 	input := ecs.UpdateServiceInput{
 		Cluster:      aws.String(target.Cluster),
 		Service:      aws.String(target.Service),
@@ -37,6 +35,7 @@ func (e *ecsRepository) StopFargate(target ECS) {
 
 	_, err := e.client.ECSAPI.UpdateService(&input)
 	if err != nil {
-		log.Printf("failer to update service: %v", err)
+		return err
 	}
+	return nil
 }

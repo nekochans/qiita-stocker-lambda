@@ -22,7 +22,9 @@ func init() {
 }
 
 func handler(events.CloudWatchEvent) error {
-	app.StopFargate(rep)
+	if err := app.StopFargate(rep); err != nil {
+		return err
+	}
 	return nil
 }
 
