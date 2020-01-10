@@ -9,6 +9,9 @@ clean:
 
 build: clean haltrds
 
+test:
+	go test -v ./...
+
 haltrds:
 	GOOS=linux GOARCH=amd64 go build -o bin/halt-rds ./halt-rds
 	chmod +x bin/halt-rds
