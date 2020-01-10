@@ -7,7 +7,7 @@ STACK_NAME := dev-qiita-stocker-lambda
 clean:
 	rm -rf ./bin/halt-rds
 
-build: clean haltrds
+build: clean haltrds stopfg
 
 test:
 	go test -v ./...
@@ -15,6 +15,10 @@ test:
 haltrds:
 	GOOS=linux GOARCH=amd64 go build -o bin/halt-rds ./halt-rds
 	chmod +x bin/halt-rds
+
+stopfg:
+	GOOS=linux GOARCH=amd64 go build -o bin/stop-fargate ./stop-fargate
+	chmod +x bin/stop-fargate
 
 validate:
 	sam validate \
