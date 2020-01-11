@@ -26,8 +26,34 @@ Resources:
           Properties:
             Schedule: cron(0 18 ? * * *)
 
+  StopFargateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: bin/
+      Handler: stop-fargate
+      Runtime: go1.x
+      Tracing: Active
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - ecs:UpdateService
+              Resource: '*'
+      Events:
+        StartScan:
+          Type: Schedule
+          Properties:
+            Schedule: cron(0 18 ? * * *)
+
   HaltRdsFuncLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub /aws/lambda/${HaltRdsFunction}
+      RetentionInDays: 7
+
+  StopFargateFuncLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${StopFargateFunction}
       RetentionInDays: 7
